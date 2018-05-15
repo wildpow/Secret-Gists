@@ -129,6 +129,15 @@ server.post('/create', urlencodedParser, (req, res) => {
 });
 
 server.post('/createsecret', urlencodedParser, (req, res) => {
+  const { name, content } = req.body;
+  const files = { [name]: { content } };
+  github.gists.create({ files, public: false })
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((err) => {
+      res.json(err);
+    }); 
   // TODO Create a private and encrypted gist with given name/content
   // NOTE - we're only encrypting the content, not the filename
   // To save, we need to keep both encrypted content and nonce
